@@ -1,0 +1,12 @@
+.chat-container {
+    position: relative;
+    background-color: rgb(245, 245, 245);
+    width: clamp(80%, 85%, 90%);
+    margin: auto;
+    height: 80vh;
+}
+
+.messages-container {
+    overflow-y: auto;
+    height: 100%;
+}
