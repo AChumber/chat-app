@@ -24,7 +24,7 @@ const ChatContainer:React.FC = () => {
 
     useEffect(() => {
         if(username !== '') {
-            socket.connect().emit('user_join', {name: username, room});
+            socket.connect().emit('user:new-join', {name: username, room});
         }
         return () => {
             socket.close();
@@ -32,14 +32,14 @@ const ChatContainer:React.FC = () => {
     }, [username]);
 
     useEffect(() => {
-        socket.on('new_user_join', (data:SocketMessageInterface) => {
+        socket.on('user:new-join', (data:SocketMessageInterface) => {
             console.log(data);
             setMessages(prevMessages => [...prevMessages, data]);
         });
-        socket.on('chat-message', (data:SocketMessageInterface) => {
+        socket.on('message:chat', (data:SocketMessageInterface) => {
             setMessages(prevMessages => [...prevMessages, data]);
         })
-        socket.on('user_left', (data:SocketMessageInterface) => {
+        socket.on('user:left', (data:SocketMessageInterface) => {
             console.log(data);
             setMessages(prevMessage => [...prevMessage, data]);
         })

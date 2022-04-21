@@ -18,9 +18,9 @@ const ChatDetails: React.FC<Props> = ({ socket, clearMessages }) => {
         setShowChangeRoomModal(!showChangeRoomModal);
     }
 
-    const changeRoomClick = (roomName:string):void => {
+    const changeRoom = (roomName:string):void => {
         //change room from this one to new one specified. Will update context 
-        socket.emit('user-join-new-room',
+        socket.emit('user:join-new-room',
             {name: username, room, newRoom: roomName}, 
             (isJoinNewRoom:boolean) => {
                 console.log(isJoinNewRoom);
@@ -43,7 +43,7 @@ const ChatDetails: React.FC<Props> = ({ socket, clearMessages }) => {
             </div>
             {
                 showChangeRoomModal && (
-                    <RoomModal setShowRoomModal={ setShowChangeRoomModal } handleJoinRoom={ changeRoomClick } />
+                    <RoomModal setShowRoomModal={ setShowChangeRoomModal } handleJoinRoom={ changeRoom } />
                 )
             }
         </>

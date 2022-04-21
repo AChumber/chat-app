@@ -30,7 +30,7 @@ const ChatInput: React.FC<Props> = ({ socket, setMessages }) => {
                 date: Date.now()
             };
             //send via socket
-            socket.emit("chat-message", message);
+            socket.emit("message:chat", message);
 
             //add message to state on client as server wont send message back
             setMessages(prevMessages => [...prevMessages, {  
