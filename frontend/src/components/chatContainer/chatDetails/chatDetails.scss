@@ -1,8 +1,9 @@
 .chat-details {
     display: flex;
-    width: clamp(35%,40%, 50%);
+    width: clamp(35%,50%, 60%);
     margin: auto;
     justify-content: space-between;
+    align-items: center;
 
     .change-room-icon-span {
         padding: 0.1rem 0.5rem 0.1rem 0;
