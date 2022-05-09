@@ -1,12 +1,26 @@
 .chat-container {
     position: relative;
     background-color: rgb(245, 245, 245);
-    width: clamp(80%, 85%, 90%);
+    width: 85%;
     margin: auto;
-    height: 80vh;
+    height: 77vh
 }
 
 .messages-container {
     overflow-y: auto;
     height: 100%;
+}
+
+//850px
+@media only screen and (min-height:850px) {
+    .chat-container {
+        height: 80vh;
+    }
+}
+
+//970
+@media only screen and (max-width:970px) {
+    .chat-container {
+        width: 95%;
+    }
 }

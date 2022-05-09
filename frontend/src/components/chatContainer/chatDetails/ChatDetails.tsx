@@ -5,6 +5,7 @@ import RoomModal from '../../roomModal/RoomModal';
 import UserContext from '../../../context/UserContext';
 import './chatDetails.scss';
 import RoomUsers from './roomUsers/RoomUsers';
+import { AnimatePresence } from 'framer-motion';
 
 interface Props {
     socket: Socket,
@@ -48,11 +49,13 @@ const ChatDetails: React.FC<Props> = ({ socket, clearMessages, users, setUsersLi
                     <RoomUsers users={ users } />
                 </div>
             </div>
-            {
-                showChangeRoomModal && (
-                    <RoomModal setShowRoomModal={ setShowChangeRoomModal } handleJoinRoom={ changeRoom } />
-                )
-            }
+            <AnimatePresence>
+                {
+                    showChangeRoomModal && (
+                        <RoomModal setShowRoomModal={ setShowChangeRoomModal } handleJoinRoom={ changeRoom } />
+                    )
+                }
+            </AnimatePresence>
         </>
     )
 }

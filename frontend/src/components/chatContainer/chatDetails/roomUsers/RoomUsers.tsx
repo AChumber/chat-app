@@ -1,3 +1,4 @@
+import { AnimatePresence } from 'framer-motion';
 import React, { useState } from 'react';
 import UsersModal from '../../../usersModal/UsersModal';
 import './roomUsers.scss';
@@ -25,6 +26,7 @@ const RoomUsers = ({ users }:Props) => {
                 </div>
                 <span className='more-users-link' onClick={()=>setShowUsersModal(!showUsersModal)}>See more Users...</span>
             
+                <AnimatePresence>
                 {
                     showUsersModal && (
                         <UsersModal 
@@ -32,6 +34,7 @@ const RoomUsers = ({ users }:Props) => {
                             users={ users }/>
                     )
                 }
+                </AnimatePresence>
             </>
         )
     }

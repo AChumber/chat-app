@@ -17,3 +17,20 @@
         }
     }
 }
+
+@media only screen and (max-width:970px) {
+    .chat-details {
+        width: 75%;
+    }
+}
+
+@media only screen and (max-width:660px) {
+    .chat-details {
+        width: 85%;
+    }
+}
+@media only screen and (max-width:470px) {
+    .chat-details {
+        width: 95%;
+    }
+}

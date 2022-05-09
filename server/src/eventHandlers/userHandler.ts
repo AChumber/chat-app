@@ -43,7 +43,11 @@ export default (io:Server<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, 
         io.to(newRoom).emit('user:new-join', 
             responseBuilder(MessageTypes.USER_JOIN, `${name} has joined the chat`, MessageTypes.SERVER, Date.now())
         );
-        
+
+        //remove user from old room
+        rooms[room].users = rooms[room].users.filter(user => user.name !== name);
+
+        //add user to newly created room
         if(rooms[newRoom] === undefined) {
             rooms[newRoom] = {
                 name: newRoom,
