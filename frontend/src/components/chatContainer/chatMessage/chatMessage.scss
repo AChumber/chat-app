@@ -7,9 +7,14 @@
     padding: 0.5rem;
     float:left;
 
+    .chat-message {
+        margin: 0;
+        padding-bottom: 0.15rem;
+    }
+
     & .message-date {
         position: absolute;
-        bottom: -21%;
+        bottom: -46%;
         font-size: 0.6rem;
         font-style: italic;
     }
@@ -17,6 +22,7 @@
     & h3 {
         font-size: 0.9rem;
         color: rgb(70, 70, 70);
+        margin: 0;
     }
 }
 .my_message {
@@ -25,7 +31,7 @@
     background-color: white;
 
     & .message-date {
-        right: 1%;
+        right: 0.5rem;
     }
 }
 

@@ -49,7 +49,7 @@ const ChatInput: React.FC<Props> = ({ socket, setMessages }) => {
                 value={ messageInput }
                 onChange={ (e) => setMessageInput(e.target.value) }
                 placeholder="Type to Chat..." />
-            <button onClick={ handleSend }><MdSend /></button>
+            <button onClick={ handleSend }><MdSend /><span className='send-btn-text'>Send</span></button>
         </div>
     )
 }
