@@ -1,0 +1,59 @@
+.chat-feedback {
+    position: absolute;
+    top: 100%;
+    transform: translateY(-100%);
+    width: 100%;
+    background-color: rgb(253, 253, 253);
+    color: rgb(95, 95, 95);
+    border-radius: 10px 10px 0 0;
+    
+    .feedback-text-container {
+        position: relative;
+        width: auto;
+        display: flex;
+    }
+
+    .user-typing-feedback {
+        margin: 0;
+        position: relative;
+    }
+
+    .feedback-ellipses {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background-color: rgb(95, 95, 95);
+        display: inline-block;
+        margin-right: 0.1rem;
+
+        animation: ellipses-animation 1.5s infinite;
+        &:nth-child(1) {
+            margin-left: 0.25rem;
+        }
+        @for $i from 2 through 3 {
+            &:nth-child(#{$i}){
+                animation-delay: #{$i * 0.3}s;
+            }
+        }
+
+
+    }
+}
+
+@keyframes ellipses-animation {
+    0% {
+        transform: translateY(0);
+    }
+    10% {
+        transform: translateY(1px);
+    }
+    40% {
+        transform: translateY(3px);
+    }
+    80% {
+        transform: translateY(-3px);
+    }
+    100% {
+        transform: translateY(-1px);
+    }
+}

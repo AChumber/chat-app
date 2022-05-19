@@ -5,6 +5,7 @@ import './chatContainer.scss';
 import ChatMessage from './chatMessage/ChatMessage';
 import UserContext from '../../context/UserContext';
 import ChatDetails from './chatDetails/ChatDetails';
+import ChatFeedback from './chatFeedback/ChatFeedback';
 
 export interface SocketMessageInterface {
     type: string,
@@ -23,6 +24,7 @@ const ChatContainer:React.FC = () => {
     const { username, room } = useContext(UserContext);
     const [messages, setMessages] = useState<Array<SocketMessageInterface>>([]);
     const [usersList, setUsersList] = useState<Array<{name: string, isActive: boolean}>>([]);
+    const [feedbackList, setFeedbackList] = useState<Array<SocketMessageInterface>>([]);
 
     useEffect(() => {
         if(username !== '') {
@@ -51,6 +53,17 @@ const ChatContainer:React.FC = () => {
             setUsersList(prevList => prevList.filter(user => user.name !== userLeft));
             setMessages(prevMessage => [...prevMessage, data]);
         })
+
+        socket.on('user:typing', (data:SocketMessageInterface) => {
+            //display message above chat input
+            console.log(data);
+            setFeedbackList([data]);
+        })
+
+        socket.on('user:typing-stop', (data:SocketMessageInterface) => {
+            //Remove message about the user typing
+            setFeedbackList([]);
+        })
     }, [socket]);
 
     const clearMessages = ():void => {
@@ -72,6 +85,7 @@ const ChatContainer:React.FC = () => {
                         ))
                     }
                 </div>
+                <ChatFeedback feedback={ feedbackList } />
                 <ChatInput socket={ socket } setMessages={ setMessages } />
             </div>
         </>

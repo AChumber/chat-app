@@ -1,9 +1,10 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useRef } from 'react';
 import { MdSend } from 'react-icons/md';
 import { Socket } from 'socket.io-client';
 import UserContext from '../../../context/UserContext';
 import { SocketMessageInterface } from '../ChatContainer';
 import './chatInput.scss';
+
 
 interface Props {
     socket: Socket,
@@ -20,6 +21,9 @@ interface SendMessageInterface {
 const ChatInput: React.FC<Props> = ({ socket, setMessages }) => {
     const { username, room } = useContext(UserContext);
     const [messageInput, setMessageInput] = useState<string>('');
+    const [userTimeout, setUserTimeout] = useState<any>(undefined);
+    const isTyping = useRef(false);
+
 
     const handleSend = () => {
         if(messageInput !== ''){
@@ -31,6 +35,8 @@ const ChatInput: React.FC<Props> = ({ socket, setMessages }) => {
             };
             //send via socket
             socket.emit("message:chat", message);
+            socket.emit("user:typing-stop", {name: username, room})
+            isTyping.current = false;
 
             //add message to state on client as server wont send message back
             setMessages(prevMessages => [...prevMessages, {  
@@ -42,12 +48,38 @@ const ChatInput: React.FC<Props> = ({ socket, setMessages }) => {
         }
     };
 
+    const timeoutTyping = () => {
+        isTyping.current = false;
+        socket.emit("user:typing-stop", {name: username, room});
+    };
+    const handleMessageInputChange = (e:React.ChangeEvent<HTMLInputElement>) => {
+        setMessageInput(e.target.value)
+
+        if(messageInput === '') {
+            clearTimeout(userTimeout);
+            isTyping.current = false;
+            socket.emit("user:typing-stop", {name: username, room})
+        }
+
+        if(!isTyping.current) {
+            socket.emit('user:typing', {name: username, room});
+            isTyping.current = true;
+            setUserTimeout(setTimeout(timeoutTyping, 5000));
+        } else {
+            clearTimeout(userTimeout);
+            setUserTimeout(setTimeout(timeoutTyping, 5000));
+        }
+
+    }
+
+
+
     return (
         <div className='chat-input-container'>
             <input 
                 type='text' 
                 value={ messageInput }
-                onChange={ (e) => setMessageInput(e.target.value) }
+                onChange={ handleMessageInputChange }
                 placeholder="Type to Chat..." />
             <button onClick={ handleSend }><MdSend /><span className='send-btn-text'>Send</span></button>
         </div>

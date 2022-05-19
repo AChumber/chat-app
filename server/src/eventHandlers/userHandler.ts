@@ -59,6 +59,24 @@ export default (io:Server<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, 
             const {socketId, ...userToSend} = user;
             return userToSend;
         }));
+    });
+
+
+    //User Typing
+    //data - name, room
+    socket.on('user:typing', (data) => {
+        const { name, room } = data;
+        socket.broadcast.to(room).emit('user:typing', 
+            responseBuilder(MessageTypes.USER_TYPING, `${name} is typing`, MessageTypes.SERVER, Date.now())
+        );
+    });
+
+    //data - name, room
+    socket.on('user:typing-stop', (data) => {
+        const { name, room } = data;
+        socket.broadcast.to(room).emit('user:typing-stop', 
+                responseBuilder(MessageTypes.USER_STOP_TYPING, `${name}`, MessageTypes.SERVER, Date.now())
+            );
     })
 }
 
