@@ -1,6 +1,6 @@
 import React from 'react';
 import ChatContainer from './components/chatContainer/ChatContainer';
-import Header from './components/layout/header/Header';
+import Header from './shared/layout/header/Header';
 import NameModal from './components/nameModal/NameModal';
 import { UserProvider } from './context/UserContext';
 

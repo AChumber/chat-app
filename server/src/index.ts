@@ -1,4 +1,4 @@
-import express, { Application} from 'express';
+import express, { Application } from 'express';
 import http from 'http';
 import { Server } from 'socket.io';
 import userHandler from './eventHandlers/userHandler';
