@@ -1,6 +1,6 @@
 .message-container {
     width: 90%;
-    background-color: rgb(238, 248, 255);
+    // background-color: rgb(238, 248, 255);
     margin: 0.75rem 0.4rem;
     position: relative;
     border-radius: 10px;
@@ -28,7 +28,7 @@
 .my_message {
     float: right;
     text-align: end;
-    background-color: white;
+    // background-color: white;
 
     & .message-date {
         right: 0.5rem;

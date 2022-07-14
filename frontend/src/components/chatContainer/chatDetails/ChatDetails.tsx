@@ -41,7 +41,6 @@ const ChatDetails: React.FC<Props> = ({ socket, clearMessages, users, setUsersLi
     return (
         <>
             <div className='chat-details'>
-                <p>Chatting as: { username }</p>
                 <p>Room: { room } <span data-testid='edit-room-icon' 
                                         className='change-room-icon-span' 
                                         onClick={ handleEditRoomClick }><MdModeEdit /></span></p>

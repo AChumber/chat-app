@@ -1,6 +1,7 @@
 import React, { useState, useContext, useRef } from 'react';
 import { MdSend } from 'react-icons/md';
 import { Socket } from 'socket.io-client';
+import SettingsContext from '../../../context/SettingsContext';
 import UserContext from '../../../context/UserContext';
 import { SocketMessageInterface } from '../ChatContainer';
 import './chatInput.scss';
@@ -20,6 +21,7 @@ interface SendMessageInterface {
 //Component to track user input and send to server
 const ChatInput: React.FC<Props> = ({ socket, setMessages }) => {
     const { username, room } = useContext(UserContext);
+    const settingsContext = useContext(SettingsContext);
     const [messageInput, setMessageInput] = useState<string>('');
     const [userTimeout, setUserTimeout] = useState<any>(undefined);
     const isTyping = useRef(false);
@@ -69,7 +71,15 @@ const ChatInput: React.FC<Props> = ({ socket, setMessages }) => {
             clearTimeout(userTimeout);
             setUserTimeout(setTimeout(timeoutTyping, 5000));
         }
+    }
 
+    const handleKeyDown = (e:React.KeyboardEvent<HTMLInputElement>) => {
+        if(settingsContext.enterToSend) {
+            if(e.key === 'Enter' && messageInput !== '') {
+                handleSend();
+                setMessageInput('');
+            }
+        }
     }
 
 
@@ -80,6 +90,7 @@ const ChatInput: React.FC<Props> = ({ socket, setMessages }) => {
                 type='text' 
                 value={ messageInput }
                 onChange={ handleMessageInputChange }
+                onKeyDown={ (e) => handleKeyDown(e) }
                 placeholder="Type to Chat..." />
             <button onClick={ handleSend }><MdSend /><span className='send-btn-text'>Send</span></button>
         </div>

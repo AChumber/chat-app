@@ -17,7 +17,7 @@ const UsersModal:React.FC<Props> = ({ setShowUsersModal, users }) => {
                     )
                 )
             }
-            <button onClick={()=>setShowUsersModal(false)}>Close</button>
+            <button className='modal-btn' onClick={()=>setShowUsersModal(false)}>Close</button>
         </Modal>
     )
 }

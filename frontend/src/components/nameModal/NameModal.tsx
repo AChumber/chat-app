@@ -65,7 +65,7 @@ const NameModal: React.FC = () => {
                     )
                 }
                 <p><small>Your name will be visible to others in the room chatting with you!</small></p>
-                <button onClick={e => handleEnterClick(e)}>Enter</button>
+                <button className='modal-btn' onClick={e => handleEnterClick(e)}>Enter</button>
             </Modal>
         </AnimatePresence>
     )

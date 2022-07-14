@@ -43,7 +43,7 @@ const RoomModal: React.FC<Props> = ({ setShowRoomModal, handleJoinRoom }) => {
             </div>
             <div className='modal-buttons-container'>
                 <button onClick={ () => setShowRoomModal(false) }>Cancel</button>
-                <button onClick={ e => handleJoinRoomClick(e) }>Join new Room</button>
+                <button className='modal-btn' onClick={ e => handleJoinRoomClick(e) }>Join new Room</button>
             </div>
         </Modal>
     )

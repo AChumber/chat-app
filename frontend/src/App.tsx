@@ -3,14 +3,17 @@ import ChatContainer from './components/chatContainer/ChatContainer';
 import Header from './shared/layout/header/Header';
 import NameModal from './components/nameModal/NameModal';
 import { UserProvider } from './context/UserContext';
+import { SettingsProvider } from './context/SettingsContext';
 
 const App: React.FC = () => {
   return (
     <div className="App">
       <UserProvider>
-        <Header />
-        <NameModal />
-        <ChatContainer />
+        <SettingsProvider>
+          <Header />
+          <NameModal />
+          <ChatContainer />
+        </SettingsProvider>
       </UserProvider>
     </div>
   );
