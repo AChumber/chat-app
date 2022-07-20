@@ -1,4 +1,5 @@
 import React from 'react';
+import { Routes, Route } from 'react-router-dom';
 import ChatContainer from './components/chatContainer/ChatContainer';
 import Header from './shared/layout/header/Header';
 import NameModal from './components/nameModal/NameModal';
@@ -11,8 +12,10 @@ const App: React.FC = () => {
       <UserProvider>
         <SettingsProvider>
           <Header />
-          <NameModal />
-          <ChatContainer />
+          <Routes>
+            <Route path='/' element={ <NameModal /> } />
+            <Route path='/chat' element={ <ChatContainer/> } />
+          </Routes>
         </SettingsProvider>
       </UserProvider>
     </div>

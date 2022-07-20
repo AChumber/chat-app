@@ -1,17 +1,19 @@
 import React, { useContext, useEffect, useState } from 'react';
 import UserContext from '../../context/UserContext';
+import { useNavigate } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import { BsFillPencilFill, BsFillXCircleFill, BsBoxArrowLeft } from 'react-icons/bs';
 import './settings.scss';
 import SettingsContext from '../../context/SettingsContext';
 import { ColorsInterface } from '../../context/ColoursContext';
+import { changeUsername, signOut } from '../../components/chatContainer/ChatContainer';
 
 interface Props {
     showSettingsPanel: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 const Settings: React.FC<Props> = ({ showSettingsPanel }) => {
-    const { username } = useContext(UserContext);
+    const { username, setUsername, room } = useContext(UserContext);
     const settingsContext = useContext(SettingsContext);
     const [isChangeName, setIsChangeName] = useState<boolean>(false);
     const [usernameChangeInput, setUsernameChangeInput] = useState<string>(username);
@@ -20,6 +22,7 @@ const Settings: React.FC<Props> = ({ showSettingsPanel }) => {
         myMessages: '',
         recievedMessages: ''
     });
+    const navigate = useNavigate();
 
     useEffect(() => {
         //Change settings based on settings in context when component mounts
@@ -58,6 +61,14 @@ const Settings: React.FC<Props> = ({ showSettingsPanel }) => {
         showSettingsPanel(false);
     }
 
+    const handleNameChange = () => {
+        if(usernameChangeInput !== '') {
+            //oldName, newName, room
+            changeUsername(username, usernameChangeInput, room);
+            setUsername(usernameChangeInput);
+        }
+    }
+
     const handleSwitchChange = (e:React.ChangeEvent<HTMLInputElement>):void => {
         setEnterToSendSwitch(e.target.checked);
         settingsContext.setEnterToSend(e.target.checked);
@@ -76,6 +87,12 @@ const Settings: React.FC<Props> = ({ showSettingsPanel }) => {
         settingsContext.setColors(bubbleColors);
     }
 
+    const handleSignOutClick = (e:React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+        signOut(username, room);
+        setUsername('');
+        navigate('/');
+    }
+
     return (
         <>
             <motion.div initial={{ opacity: 0 }}
@@ -91,7 +108,9 @@ const Settings: React.FC<Props> = ({ showSettingsPanel }) => {
                 <div className='settings-name-section settings-section'>
                     <h2>Username:</h2>
                     <p className='settings-name'>Chatting as: { username } 
-                        <span className='settings-edit-name-btn' onClick={() => setIsChangeName(!isChangeName)}>
+                        <span className='settings-edit-name-btn' 
+                            onClick={() => setIsChangeName(!isChangeName)}
+                            title='Edit Username'>
                             <BsFillPencilFill />
                         </span>
                     </p>
@@ -105,7 +124,7 @@ const Settings: React.FC<Props> = ({ showSettingsPanel }) => {
                                 className='settings-change-name-input'>
                                     <input type='text' value={usernameChangeInput} 
                                         onChange={(e) => setUsernameChangeInput(e.target.value)} />
-                                    <button>Update Username</button>
+                                    <button onClick={ handleNameChange }>Update Username</button>
                             </motion.div>
                         )
                     }
@@ -134,7 +153,7 @@ const Settings: React.FC<Props> = ({ showSettingsPanel }) => {
                     </p>
                 </div>
 
-                <button className='sign-out-btn'><BsBoxArrowLeft />Sign out</button>
+                <button onClick={ handleSignOutClick } className='sign-out-btn'><BsBoxArrowLeft />Sign out</button>
             </motion.div>
         </>
     )

@@ -6,7 +6,6 @@ import { responseBuilder } from "../model/responseMessage";
 
 export default (io:Server<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, any>, socket:Socket) => {
     socket.on('message:chat', (data: ChatMessageInterface) => {
-        socket.broadcast.to(data.room).emit('message:chat', 
-            responseBuilder(MessageTypes.MESSAGE, data.content, data.sender, data.date));
+        socket.broadcast.to(data.room).emit('message:new-chat', responseBuilder(MessageTypes.MESSAGE, data.content, data.sender, data.date));
     });
 }

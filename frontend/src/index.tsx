@@ -3,13 +3,16 @@ import { createRoot } from 'react-dom/client';
 import './index.scss';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { BrowserRouter } from 'react-router-dom';
 
 const appContainer = document.getElementById('root');
 if(!appContainer) throw new Error("Could not get the root element");
 const root = createRoot(appContainer);
 root.render(
   <>
-    <App />
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
   </>
 );
 
