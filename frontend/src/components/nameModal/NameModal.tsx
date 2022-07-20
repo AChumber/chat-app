@@ -1,5 +1,6 @@
 import { AnimatePresence } from 'framer-motion';
 import React, { useState, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 import UserContext from '../../context/UserContext';
 import Modal from '../modal/Modal';
 import './nameModal.scss';
@@ -17,6 +18,7 @@ const NameModal: React.FC = () => {
         name: false,
         room: false
     });
+    const navigate = useNavigate();
 
     const handleEnterClick = (e:React.MouseEvent<HTMLButtonElement, MouseEvent>):void => {
         if(nameInput !== '' && roomInput !== '') {
@@ -24,7 +26,7 @@ const NameModal: React.FC = () => {
             e.stopPropagation();
             setUsername(nameInput);
             setRoom(roomInput);
-        
+            navigate('/chat');
         } else {
             setErrors({
                 name: nameInput === '',
@@ -65,7 +67,7 @@ const NameModal: React.FC = () => {
                     )
                 }
                 <p><small>Your name will be visible to others in the room chatting with you!</small></p>
-                <button onClick={e => handleEnterClick(e)}>Enter</button>
+                <button className='modal-btn' onClick={e => handleEnterClick(e)}>Enter</button>
             </Modal>
         </AnimatePresence>
     )

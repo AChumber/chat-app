@@ -16,6 +16,7 @@ interface RoomObject {
 const rooms:{[key: string]: RoomObject} = {};
 
 export default (io:Server<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, any>, socket:Socket) => {
+    
     socket.on('user:new-join', (data, callback) => {
         socket.join(data.room);
         io.to(data.room).emit('user:new-join', 
@@ -28,9 +29,25 @@ export default (io:Server<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, 
             const {socketId, ...userToSend} = user;
             return userToSend;
         }));
-
-        console.log(rooms);
     });
+
+    socket.on('user:disconnect', (data) => {
+        const { room, name } = data;
+        removeUserFromRoom(room, name);
+
+        socket.broadcast.to(room).emit('user:disconnect', 
+        {
+            message: responseBuilder(MessageTypes.USER_LEFT, `${name} has left the chat`, MessageTypes.SERVER, Date.now()),
+            usersInRoom: rooms[room].users.map(user => {
+                            //dont send the socketId to the user.
+                            const {socketId, ...userToSend} = user;
+                            return userToSend;
+                        }) 
+        }
+        );
+
+    });
+
 
     socket.on('user:join-new-room', (data, callback) => {
         //data.username, data.room, data.newRoom
@@ -44,16 +61,9 @@ export default (io:Server<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, 
             responseBuilder(MessageTypes.USER_JOIN, `${name} has joined the chat`, MessageTypes.SERVER, Date.now())
         );
 
-        //remove user from old room
-        rooms[room].users = rooms[room].users.filter(user => user.name !== name);
+        removeUserFromRoom(room, name);
+        addUserToRoom(newRoom, name, socket.id);
 
-        //add user to newly created room
-        if(rooms[newRoom] === undefined) {
-            rooms[newRoom] = {
-                name: newRoom,
-                users: [{name, isActive: true, socketId: socket.id}]
-            };
-        }
         callback(true, rooms[newRoom].users.map(user => {
             //dont send the socketId to the user.
             const {socketId, ...userToSend} = user;
@@ -61,6 +71,18 @@ export default (io:Server<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, 
         }));
     });
 
+    //data - oldName, newName
+    socket.on('user:change-name', data => {
+        const { oldName, newName, room } = data;
+        changeUsersName(room, oldName, newName);
+
+        socket.broadcast.to(room).emit('user:change-name', 
+            responseBuilder(MessageTypes.SERVER, 
+                `'${oldName}' has changed their name to '${newName}'`, 
+                MessageTypes.SERVER, 
+                Date.now())
+        );
+    })
 
     //User Typing
     //data - name, room
@@ -75,8 +97,8 @@ export default (io:Server<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, 
     socket.on('user:typing-stop', (data) => {
         const { name, room } = data;
         socket.broadcast.to(room).emit('user:typing-stop', 
-                responseBuilder(MessageTypes.USER_STOP_TYPING, `${name}`, MessageTypes.SERVER, Date.now())
-            );
+            responseBuilder(MessageTypes.USER_STOP_TYPING, `${name}`, MessageTypes.SERVER, Date.now())
+        );
     })
 }
 
@@ -99,4 +121,23 @@ const addUserToRoom = (roomName: string, name: string, socketId: string) => {
             socketId
         });
     }
+}
+
+const removeUserFromRoom = (roomName: string, name: string) => {
+    if(rooms[roomName] !== null) {
+        rooms[roomName].users = rooms[roomName].users.filter(user => user.name !== name);
+    }
+}
+
+const changeUsersName = (roomName: string, oldName: string, newName: string) => {
+    if(rooms[roomName] !== null) {
+        for(let userIndex in rooms[roomName].users) {
+            let user = rooms[roomName].users[userIndex];
+            if(user.name === oldName) {
+                user.name = newName;
+            }
+        }
+    }
+
+    console.log(rooms[roomName].users);
 }

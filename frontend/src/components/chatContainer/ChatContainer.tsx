@@ -15,10 +15,18 @@ export interface SocketMessageInterface {
     source?: string 
 };
 
-const socket= io("http://localhost:3001", {
+const socket = io("http://localhost:3001", {
     autoConnect: false
 });
 
+export const changeUsername = (oldName:string, newName:string, room:string) => {
+    socket.emit('user:change-name', {oldName, newName, room});
+};
+
+export const signOut = (username:string, room:string) => {
+    socket.emit('user:disconnect', {room, name:username});
+    socket.disconnect();
+};
 
 const ChatContainer:React.FC = () => {
     const { username, room } = useContext(UserContext);
@@ -33,7 +41,7 @@ const ChatContainer:React.FC = () => {
         return () => {
             socket.close();
         }
-    }, [username]);
+    }, []);
 
     useEffect(() => {
         socket.on('user:new-join', (data:SocketMessageInterface) => {
@@ -44,9 +52,19 @@ const ChatContainer:React.FC = () => {
             setMessages(prevMessages => [...prevMessages, data]);
         });
 
-        socket.on('message:chat', (data:SocketMessageInterface) => {
+        socket.on('message:new-chat', (data:SocketMessageInterface) => {
+            console.log(data);
             setMessages(prevMessages => [...prevMessages, data]);
         })
+
+        socket.on('user:disconnect', (data) => {
+            setMessages(prevMessages => [...prevMessages, data.message]);
+            setUsersList(data.usersInRoom);
+        })
+
+        socket.on('user:change-name', (data:SocketMessageInterface) => {
+            setMessages(prevMessages => [...prevMessages, data]);
+        });
 
         socket.on('user:left', (data:SocketMessageInterface) => {
             const userLeft:string = data.content.slice(0, (data.content.indexOf('has') || 0)).trim();
@@ -56,7 +74,6 @@ const ChatContainer:React.FC = () => {
 
         socket.on('user:typing', (data:SocketMessageInterface) => {
             //display message above chat input
-            console.log(data);
             setFeedbackList([data]);
         })
 
